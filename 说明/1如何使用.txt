@@ -41,7 +41,6 @@ cd ~/OrangeFox_sync
   5.删除“recovery”子目录，并将OrangeFox源码克隆到新的“recovery”子目录中
   6.在终端里cd进manifest的“vendor”子目录
   7.将OrangeFox vendor源码克隆到新的“recovery”子目录中
-  （8.安卓12分支由于上游twrp12仍在开发中，目前即使完成上述步骤，仍然会编译失败，所以需要额外手动打补丁，具体方法orangefox_sync.sh脚本里有提到）
 
 举个例子，第4、5步打开~/fox_11.0/bootable目录，检查recovery文件夹里面到底是橙狐的源码还是twrp的源码，如果是twrp的就删除整个recovery文件夹，用这个命令下载橙狐的rec源码
 cd ~/fox_11.0/bootable

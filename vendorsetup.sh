@@ -6,7 +6,6 @@
 #
 # 关于橙狐变量详见 fox_12.1/vendor/recovery/orangefox_build_vars.txt
 
-	export TW_DEFAULT_LANGUAGE="zh_CN"
 	export LC_ALL="C"
 	export ALLOW_MISSING_DEPENDENCIES=true
 
@@ -80,22 +79,6 @@
 	export OF_FL_PATH2=/sys/class/leds/torch-light1
 	# 橙狐只支持两个闪光灯路径变量，但是这个手机有3个,其实有一个就行了，这个无实际用途
 	# export OF_FL_PATH3=/sys/class/leds/torch-light2
-
-	## 界面显示设定
-	# 设置屏幕高度，状态栏高度，状态栏左右边距
-	# 由于橙狐默认屏幕比例是16：9,所以应设置屏幕高度为屏幕比例换算成n：9之后，n*120
-	export OF_SCREEN_H=2400
-	# 状态栏高度（默认72像素，刘海屏设备按需设置）
-	export OF_STATUS_H=59
-	# 状态栏左右避让宽度（默认20像素，顶部圆角设备按需设置）
-	export OF_STATUS_INDENT_LEFT=90
-	export OF_STATUS_INDENT_RIGHT=90
-	# 添加黑色状态栏（隐藏刘海）选项
-	export OF_HIDE_NOTCH=1
-	# 由于有刘海遮挡，设置时钟位置为只能显示在左侧或右侧
-	export OF_CLOCK_POS=1
-	# 禁止禁用导航栏
-	export OF_ALLOW_DISABLE_NAVBAR=0
 
 	## 调整刷入zip刷机包时刷机脚本要检测的相关属性
 	# 设置一个很老的build时间，用于解决某些ROM例如MIUI刷机脚本里的防回滚保护检测
