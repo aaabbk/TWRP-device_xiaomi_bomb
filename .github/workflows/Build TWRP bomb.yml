@@ -1,6 +1,9 @@
 name: Build TWRP bomb
 
 on:
+  push:
+    branches:
+      - twrp-12.1
   workflow_dispatch:
     inputs:
       MANIFEST_URL:
@@ -35,6 +38,14 @@ on:
 jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
+    env:
+      MANIFEST_URL: ${{ github.event.inputs.MANIFEST_URL || 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp' }}
+      MANIFEST_BRANCH: ${{ github.event.inputs.MANIFEST_BRANCH || 'twrp-12.1' }}
+      DEVICE_TREE_URL: ${{ github.event.inputs.DEVICE_TREE_URL || 'https://github.com/aaabbk/TWRP-device_xiaomi_bomb' }}
+      DEVICE_TREE_BRANCH: ${{ github.event.inputs.DEVICE_TREE_BRANCH || 'twrp-12.1' }}
+      DEVICE_PATH: ${{ github.event.inputs.DEVICE_PATH || 'device/xiaomi/bomb' }}
+      DEVICE_NAME: ${{ github.event.inputs.DEVICE_NAME || 'bomb' }}
+      MAKEFILE_NAME: ${{ github.event.inputs.MAKEFILE_NAME || 'twrp_bomb' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -42,13 +53,13 @@ jobs:
     - name: Display Run Parameters
       run: |
         echo "::group::User Environment Variables"
-        echo "Manifest URL: ${{ github.event.inputs.MANIFEST_URL }}"
-        echo "Manifest Branch: ${{ github.event.inputs.MANIFEST_BRANCH }}"
-        echo "Device Tree URL: ${{ github.event.inputs.DEVICE_TREE_URL }}"
-        echo "Device Tree Branch: ${{ github.event.inputs.DEVICE_TREE_BRANCH }}"
-        echo "Device Path: ${{ github.event.inputs.DEVICE_PATH }}"
-        echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
-        echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
+        echo "Manifest URL: ${{ env.MANIFEST_URL }}"
+        echo "Manifest Branch: ${{ env.MANIFEST_BRANCH }}"
+        echo "Device Tree URL: ${{ env.DEVICE_TREE_URL }}"
+        echo "Device Tree Branch: ${{ env.DEVICE_TREE_BRANCH }}"
+        echo "Device Path: ${{ env.DEVICE_PATH }}"
+        echo "Device Name: ${{ env.DEVICE_NAME }}"
+        echo "Makefile Name: ${{ env.MAKEFILE_NAME }}"
         echo "Build Target: recoveryimage (recovery 分区机型)"
         echo "::endgroup::"
 
@@ -101,7 +112,7 @@ jobs:
         echo "workspace-folder=$(pwd)" >> $GITHUB_OUTPUT
         git config --global user.name "aaabbk"
         git config --global user.email "aaabbk@users.noreply.github.com"
-        repo init --depth=1 -u ${{ github.event.inputs.MANIFEST_URL }} -b ${{ github.event.inputs.MANIFEST_BRANCH }}
+        repo init --depth=1 -u ${{ env.MANIFEST_URL }} -b ${{ env.MANIFEST_BRANCH }}
       id: pwd
 
     - name: Repo Sync
@@ -111,7 +122,7 @@ jobs:
 
     - name: Clone device tree
       run: |
-        git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
+        git clone ${{ env.DEVICE_TREE_URL }} -b ${{ env.DEVICE_TREE_BRANCH }} ./${{ env.DEVICE_PATH }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Set Swap Space
@@ -124,7 +135,7 @@ jobs:
       run: |
         export ALLOW_MISSING_DEPENDENCIES=true
         . build/envsetup.sh
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng
+        lunch ${{ env.MAKEFILE_NAME }}-eng
         mka recoveryimage -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
@@ -132,12 +143,12 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery.img
-        name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
+          workspace/out/target/product/${{ env.DEVICE_NAME }}/recovery.img
+        name: ${{ env.DEVICE_NAME }}-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
-          Manifest: ${{ github.event.inputs.MANIFEST_BRANCH }}
-          Device: ${{ github.event.inputs.DEVICE_NAME }}
+          Manifest: ${{ env.MANIFEST_BRANCH }}
+          Device: ${{ env.DEVICE_NAME }}
           Target: recovery.img
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
