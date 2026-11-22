@@ -48,7 +48,7 @@ OrangeFox Branch
 Custom Recovery Tree  
 `https://github.com/aaabbk/TWRP-device_xiaomi_bomb`  
 Custom Recovery Tree Branch  
-`fox_12.1`  
+`twrp-12.1`  
 Specify your device path.  
 `device/xiaomi/bomb`  
 Specify your Device Codename.  
