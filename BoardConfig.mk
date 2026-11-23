@@ -113,8 +113,8 @@ TW_FRAMERATE := 60
 # 挖孔屏：整体下移并压缩高度，避开顶部水滴挖孔（替代橙狐 OF_HIDE_NOTCH / OF_STATUS_H）
 TW_Y_OFFSET := 59
 TW_H_OFFSET := -59
-# 时钟放右侧，避开中间挖孔（替代橙狐 OF_CLOCK_POS）；左 CPU/版本、右电量沿用 TWRP 默认
-TW_CUSTOM_CLOCK_POS := right
+# 时间用 TWRP 默认居中布局（左 CPU/版本、中时间、右电量），不设 TW_CUSTOM_CLOCK_POS，
+# 否则时间会被推到右侧和电量文字重叠
 
 # Crypto
 TW_INCLUDE_CRYPTO := true
