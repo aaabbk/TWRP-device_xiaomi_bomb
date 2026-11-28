@@ -5,6 +5,10 @@ on init
     symlink /dev/block/platform/bootdevice /dev/block/bootdevice
     mkdir /mnt/vendor/persist 0700 root root
     mount ext4 /dev/block/platform/bootdevice/by-name/persist /mnt/vendor/persist
+    # persist 已挂到 /mnt/vendor/persist（teei_daemon 需要这个路径），
+    # TWRP 的 /persist 条目再去 mount 同一块设备会 EBUSY，这里用 bind mount 让它可见
+    mkdir /persist 0700 root root
+    mount none /mnt/vendor/persist /persist bind
     export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
 
 on fs
